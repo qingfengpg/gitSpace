@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF知识库管理系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="file"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #e7f3ff;
+        }
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PDF知识库管理系统</h1>
+        
+        <div class="section">
+            <h2>上传PDF文档到知识库</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="pdfFile">选择PDF文件:</label>
+                    <input type="file" id="pdfFile" name="file" accept=".pdf" required>
+                </div>
+                <div class="form-group">
+                    <label for="metadata">元数据 (可选):</label>
+                    <input type="text" id="metadata" name="metadata" placeholder="例如：文档来源、分类等">
+                </div>
+                <button type="submit">上传到知识库</button>
+            </form>
+            <div id="uploadResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>知识库搜索</h2>
+            <div class="form-group">
+                <label for="searchQuery">搜索内容:</label>
+                <textarea id="searchQuery" placeholder="输入您想搜索的内容..."></textarea>
+            </div>
+            <button onclick="searchKnowledgeBase()">搜索知识库</button>
+            <div id="searchResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>基于知识库的问答</h2>
+            <div class="form-group">
+                <label for="question">请输入问题:</label>
+                <textarea id="question" placeholder="例如：根据文档告诉我... 或者 基于PDF回答..."></textarea>
+            </div>
+            <button onclick="askWithKnowledgeBase()">基于知识库回答</button>
+            <div id="qaResult" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 上传PDF文档
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById('pdfFile');
+            const metadataInput = document.getElementById('metadata');
+            
+            if (!fileInput.files[0]) {
+                showResult('uploadResult', '请选择一个PDF文件', 'error');
+                return;
+            }
+            
+            formData.append('file', fileInput.files[0]);
+            if (metadataInput.value) {
+                formData.append('metadata', metadataInput.value);
+            }
+            
+            try {
+                const response = await fetch('/api/knowledge-base/upload-pdf', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                showResult('uploadResult', result.message, result.success ? 'success' : 'error');
+            } catch (error) {
+                showResult('uploadResult', '上传失败: ' + error.message, 'error');
+            }
+        });
+        
+        // 搜索知识库
+        async function searchKnowledgeBase() {
+            const query = document.getElementById('searchQuery').value.trim();
+            if (!query) {
+                showResult('searchResult', '请输入搜索内容', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/knowledge-base/search?query=${encodeURIComponent(query)}&topK=3`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    let content = `找到 ${result.count} 条相关结果：<br><br>`;
+                    result.results.forEach((doc, index) => {
+                        content += `<strong>结果 ${index + 1}:</strong><br>`;
+                        content += `${doc.content.substring(0, 300)}${doc.content.length > 300 ? '...' : ''}<br>`;
+                        content += `<small>来源: ${doc.metadata.filename || '未知'}</small><br><br>`;
+                    });
+                    showResult('searchResult', content, 'success');
+                } else {
+                    showResult('searchResult', result.message, 'error');
+                }
+            } catch (error) {
+                showResult('searchResult', '搜索失败: ' + error.message, 'error');
+            }
+        }
+        
+        // 基于知识库问答
+        async function askWithKnowledgeBase() {
+            const question = document.getElementById('question').value.trim();
+            if (!question) {
+                showResult('qaResult', '请输入问题', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/knowledge-base/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: question,
+                        topK: 3
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    let content = `<strong>问题:</strong> ${result.query}<br><br>`;
+                    
+                    if (result.references && result.references.length > 0) {
+                        content += `<strong>参考信息:</strong><br>`;
+                        result.references.forEach((ref, index) => {
+                            content += `${ref.content.substring(0, 200)}${ref.content.length > 200 ? '...' : ''}<br><br>`;
+                        });
+                        
+                        content += `<strong>增强提示:</strong><br>${result.enhancedPrompt.substring(0, 500)}${result.enhancedPrompt.length > 500 ? '...' : ''}`;
+                    } else {
+                        content = '未在知识库中找到相关内容';
+                    }
+                    
+                    showResult('qaResult', content, result.success ? 'success' : 'error');
+                } else {
+                    showResult('qaResult', result.message, 'error');
+                }
+            } catch (error) {
+                showResult('qaResult', '问答失败: ' + error.message, 'error');
+            }
+        }
+        
+        // 显示结果的辅助函数
+        function showResult(elementId, message, type) {
+            const resultElement = document.getElementById(elementId);
+            resultElement.innerHTML = message;
+            resultElement.className = `result ${type}`;
+            resultElement.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

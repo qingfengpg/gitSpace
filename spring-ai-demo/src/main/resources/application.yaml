@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: spring-ai-demo
+  ai:
+    ollama:
+      enabled: false  # 启用ollama
+      base-url: http://localhost:11434
+      chat:
+        model: qwen3.5-397b-a17b
+    openai:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode
+      api-key: sk-1525b32b85b2498d971ece9dfc015b7d
+      chat:
+        options:
+          model: qwen3.5-397b-a17b
+      embedding:
+        options:
+          model: text-embedding-v4
+          dimensions: 1024
+    # 向量存储配置
+    vectorstore:
+      simple:
+        # 简单向量存储配置，适合开发测试
+        embedding-store:
+          dimension: 1024
+    # 文档读取器配置
+    document-readers:
+      pdf:
+        enabled: true
+logging:
+  level:
+    com.pg.springaidemo: debug
+    org.springframework.ai.chat.client.advisor: debug
+    org.springframework.ai.document: debug
+    org.springframework.ai.pdf: debug
+    org.springframework.ai.vectorstore: debug

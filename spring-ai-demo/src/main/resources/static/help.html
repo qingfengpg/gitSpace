@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用帮助 - 智能助手团子</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section h2 {
+            color: #4facfe;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .section p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .features ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .features li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4facfe;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">← 返回聊天</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>智能助手团子 - 使用帮助</h1>
+            <p>欢迎使用基于Qwen3模型的智能聊天助手</p>
+        </div>
+        
+        <div class="section intro">
+            <h2>欢迎使用</h2>
+            <p>智能助手团子是一个基于先进AI技术的聊天机器人，使用阿里巴巴通义千问Qwen3模型为您提供智能对话服务。</p>
+            <p>团子可以回答问题、创作文字、表达观点、玩游戏等，是您的智能助手。</p>
+        </div>
+        
+        <div class="section features">
+            <h2>主要功能</h2>
+            <ul>
+                <li>智能问答 - 提出任何问题，团子都会尽力回答</li>
+                <li>创意写作 - 让团子帮您写故事、公文、邮件等</li>
+                <li>编程辅助 - 提供编程建议和代码示例</li>
+                <li>语言翻译 - 支持多种语言互译</li>
+                <li>聊天陪伴 - 日常闲聊，情感支持</li>
+                <li>知识学习 - 解释概念，提供学习资料</li>
+            </ul>
+        </div>
+        
+        <div class="section usage">
+            <h2>使用方法</h2>
+            <p><strong>开始聊天：</strong>在输入框中输入您的问题或话题，点击"发送"按钮或按回车键即可开始对话。</p>
+            <p><strong>清空记录：</strong>点击"清空"按钮可清除当前聊天记录，但不会影响历史记录。</p>
+            <p><strong>快捷键：</strong>按回车键快速发送消息（Shift+回车可换行）。</p>
+        </div>
+        
+        <div class="section tips">
+            <h2>使用技巧</h2>
+            <p><strong>清晰表达：</strong>尽量使用清晰明确的语言提问，这样团子能更好地理解您的需求。</p>
+            <p><strong>上下文关联：</strong>在连续对话中，团子会记住之前的对话内容，您可以自然地延续话题。</p>
+            <p><strong>具体问题：</strong>对于复杂问题，尽量提供更多背景信息，以获得更准确的回答。</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="index.html" class="btn">开始聊天</a>
+        </div>
+    </div>
+</body>
+</html>
