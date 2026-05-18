@@ -32,5 +32,5 @@ logging:
     com.pg.springaidemo: debug
     org.springframework.ai.chat.client.advisor: debug
     org.springframework.ai.document: debug
-    org.springframework.ai.pdf: debug
-    org.springframework.ai.vectorstore: debug
+#    org.springframework.ai.pdf: debug
+#    org.springframework.ai.vectorstore: debug
